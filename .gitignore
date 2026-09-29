@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# Local scrape/output artifacts, if run in place
+*.csv
+*.json
+*.xlsx
+*.html
+*.pdf
+downloads/
+output/
