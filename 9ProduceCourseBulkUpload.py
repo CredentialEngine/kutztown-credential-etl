@@ -25,10 +25,10 @@ Outputs (in Review/):
 import csv
 import re
 
-from catalog2ctdl.config import load_config, validate
-from catalog2ctdl.pipeline import read_csv, write_csv
-from catalog2ctdl.qa import QA_COLUMNS, run_qa, summary_markdown
-from catalog2ctdl.transform import drop_empty_columns, to_bulk_upload
+from pdf_catalog_bu.config import load_config, validate
+from pdf_catalog_bu.pipeline import read_csv, write_csv
+from pdf_catalog_bu.qa import QA_COLUMNS, run_qa, summary_markdown
+from pdf_catalog_bu.transform import drop_empty_columns, to_bulk_upload
 
 from ku_common import (
     COURSE_CTID_CROSSWALK_CSV,
