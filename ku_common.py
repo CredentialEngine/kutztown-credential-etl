@@ -53,6 +53,36 @@ UPLOAD_CREDENTIALS_CSV = UPLOAD_DIR / "KutztownCredentialsUpdateWithCompetencies
 UPLOAD_COMPETENCIES_CSV = UPLOAD_DIR / "kutztown_competencies.csv"
 DEPRECATED_CREDENTIALS_CSV = UPLOAD_DIR / "KutztownCredentialsDeprecated.csv"
 
+# ---------- COURSES (steps 7-9) ----------
+
+REPO_DIR = Path(__file__).resolve().parent
+
+# Step 7 inputs: the undergraduate catalog PDF (kept local, in DATA_DIR) and the
+# catalog2ctdl extraction profile (in this repo)
+CATALOG_PDF = DATA_DIR / "KU-Undergraduate-Catalog-2025-2026.pdf"
+COURSE_PROFILE = REPO_DIR / "profiles" / "kutztown-undergraduate-2025-2026.yaml"
+
+# Step 7 outputs
+COURSES_EXTRACTED_CSV = DATA_DIR / "kutztown_courses_extracted.csv"
+COURSES_EXTRACT_QA_CSV = DATA_DIR / "kutztown_courses_extract_qa.csv"
+
+# Step 8 output: courses already published in the Registry
+PUBLISHED_COURSES_CSV = DATA_DIR / "KutztownCoursesPublished.csv"
+
+# Manual review (between steps 8 and 9): edited copy of the step 7 output
+REVIEWED_COURSES_CSV = DATA_DIR / "kutztown_courses_reviewed.csv"
+
+# Optional: a Learning Opportunity template downloaded from the Credential
+# Publisher. If present, step 9 uses its header row for the upload columns.
+COURSE_TEMPLATE_CSV = DATA_DIR / "LearningOpportunity_Bulk_Upload_Template.csv"
+
+# Step 9 outputs
+UPLOAD_COURSES_CSV = UPLOAD_DIR / "KutztownCourses.csv"
+COURSE_QA_CSV = UPLOAD_DIR / "KutztownCourses_QA.csv"
+COURSE_QA_SUMMARY_MD = UPLOAD_DIR / "KutztownCourses_QA_summary.md"
+COURSE_CTID_CROSSWALK_CSV = UPLOAD_DIR / "KutztownCourses_CTID_crosswalk.csv"
+COURSES_NOT_IN_CATALOG_CSV = UPLOAD_DIR / "KutztownCoursesNotInCatalog.csv"
+
 # ---------- CONSTANTS ----------
 
 LANGUAGE = "en"

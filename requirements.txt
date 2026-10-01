@@ -2,3 +2,5 @@ beautifulsoup4
 pandas
 rapidfuzz
 requests
+# Steps 7-9 (courses)
+catalog2ctdl @ git+https://github.com/CredentialEngine/catalog-to-ctdl.git
