@@ -12,6 +12,9 @@ Publisher:
   profile pointing at each program's competency framework
 - a **competency framework** file (CTDL-ASN) with one framework per program's
   Student Learning Outcomes and one competency per outcome
+- a **course** file (Learning Opportunity, `Learning Type = Course`) with every
+  course in the undergraduate catalog: code, title, description, credits, and
+  subject area (steps 7–9)
 
 Kutztown's organization CTID is `ce-e483e7b6-9dd9-4588-a4f8-1d57ee313842`.
 
@@ -29,9 +32,18 @@ data folder (see [Setup](#setup)).
 | 5 | `5MatchPublishedCTIDs.py` | steps 3 and 4 | `kutztown_credentials_with_ctid4.csv`, `KutztownCredentialsPublished_with_matches4.csv` |
 | — | *manual review* | step 5 and step 3 outputs | `KutztownCredentialsPublished_with_matches4_editted.csv`, `kutztown_competencies4_reviewed.csv` |
 | 6 | `6ProduceBulkUpload.py` | reviewed files + `kutztown_credentials4.csv` | `Review/kutztown_competencies.csv`, `Review/KutztownCredentialsUpdateWithCompetencies.csv`, `Review/KutztownCredentialsDeprecated.csv` |
+| 7 | `7ExtractCatalogCourses.py` | `KU-Undergraduate-Catalog-2025-2026.pdf` | `kutztown_courses_extracted.csv`, `kutztown_courses_extract_qa.csv` |
+| 8 | `8GetPublishedCourses.py` | Credential Engine Assistant Search API | `KutztownCoursesPublished.csv` |
+| — | *course review* | step 7 outputs | `kutztown_courses_reviewed.csv` |
+| 9 | `9ProduceCourseBulkUpload.py` | reviewed courses + step 8 (+ optional Publisher template) | `Review/KutztownCourses.csv`, `Review/KutztownCourses_QA.csv`, `Review/KutztownCourses_QA_summary.md`, `Review/KutztownCourses_CTID_crosswalk.csv`, `Review/KutztownCoursesNotInCatalog.csv` |
+
+Steps 1–6 (credentials and competencies) and steps 7–9 (courses) are
+independent; either set can be run on its own.
 
 `ku_common.py` holds the shared file paths, the organization CTID, CTID
 generation, and the program-name → CTDL credential type rules.
+`profiles/kutztown-undergraduate-2025-2026.yaml` describes the catalog layout for
+the course steps.
 
 ### What each step does
 
@@ -65,6 +77,25 @@ generation, and the program-name → CTDL credential type rules.
    frameworks missing from the competency file, competencies pointing at
    missing frameworks, blank required fields, and duplicate CTIDs.
 
+7. **Extract courses:** reads the catalog's *Course Descriptions* section
+   (pp. 343–676) with [catalog2ctdl](https://github.com/CredentialEngine/catalog-to-ctdl),
+   using the profile in `profiles/`. Each bold `ACCT 121: Title` heading starts a
+   course; the large headings above them (*Accounting*, *Biology*) become the
+   subject area. The PDF draws much of its text twice and repeats the last lines
+   of each page at the top of the next; both are removed before parsing. Every
+   entry ends with the same *"current prerequisites … can be found in the online
+   Course Description"* sentence, which is dropped. Writes a QA preview of issues
+   to check during review.
+8. **Get published courses:** pages through every learning opportunity owned by
+   Kutztown in the Registry, so courses already published keep their CTIDs.
+9. **Produce course BU:** formats the reviewed courses for upload. CTIDs are
+   reused, matched on course code, from the Registry (step 8) and then from the
+   previous run's `Review/KutztownCourses.csv`; other courses get a new CTID. If
+   `LearningOpportunity_Bulk_Upload_Template.csv` (a template downloaded from the
+   Publisher) is in the data folder, its header row sets the columns. Columns
+   with no values are removed. Published courses the catalog no longer lists are
+   written to a follow-up file and not uploaded.
+
 ### Manual review
 
 Automatic matching gets you most of the way; the rest is human judgment.
@@ -80,7 +111,29 @@ Between steps 5 and 6, open the step 5 output in Excel and:
 Save the results as `KutztownCredentialsPublished_with_matches4_editted.csv`
 and `kutztown_competencies4_reviewed.csv` (UTF-8 CSV), then run step 6. In
 the Credential Publisher, upload the competency file first so the frameworks
-exist before the credentials that require them.
+exist before the credentials that require them. The course file is uploaded on
+its own through the Learning Opportunity bulk upload.
+
+### Course review
+
+Copy `kutztown_courses_extracted.csv` to `kutztown_courses_reviewed.csv`, work
+through `kutztown_courses_extract_qa.csv` (errors first), then run step 9. In the
+2025–26 catalog:
+
+- **Missing descriptions (9 courses).** Description is required; write one or
+  delete the row.
+- **Duplicates.** ARTH 315 is printed twice, and ENGL 126 appears with two
+  different titles. Keep one row per course.
+- **Unusual course numbers.** `ARTH 27`, `ASTR 26`, `MATH 3` and a few others are
+  likely typos in the catalog. Two-digit numbers such as `ANTH 10` are real.
+- **Credits.** Course entries in this catalog state no credits. About half are
+  filled from program requirement lists (`credit_source = cross_reference`) or
+  description notes (`description`); 22 have conflicting values across program
+  pages. The rest are blank and upload without credit information unless filled
+  from registrar data (`credit_min`, `credit_max`).
+
+Edit the extracted columns (`code`, `title`, `description`, `credit_min`, …), not
+the bulk-upload column names; step 9 does the formatting.
 
 ## Setup
 
@@ -97,9 +150,22 @@ current directory:
 export KUTZTOWN_DATA_DIR=/path/to/Kutztown
 ```
 
+Steps 7–9 use the [catalog2ctdl](https://github.com/CredentialEngine/catalog-to-ctdl)
+package, which `requirements.txt` installs from GitHub. Step 7 expects the
+catalog PDF in the data folder:
+
+```
+$KUTZTOWN_DATA_DIR/KU-Undergraduate-Catalog-2025-2026.pdf
+```
+
+(from <https://www.kutztown.edu/Departments-Offices/A-F/Catalog/Documents/KU-Undergraduate-Catalog-2025-2026.pdf>).
+For a new catalog year, copy the profile, update `catalog.url`,
+`version_identifier` and the file names in `ku_common.py`, and run
+`catalog2ctdl inspect` on a few course pages to confirm the headings still match.
+
 ### Credentials
 
-Step 4 calls the Credential Engine Assistant Search API and expects an API
+Steps 4 and 8 call the Credential Engine Assistant Search API and expects an API
 token in the environment:
 
 ```bash
