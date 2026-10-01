@@ -58,7 +58,7 @@ DEPRECATED_CREDENTIALS_CSV = UPLOAD_DIR / "KutztownCredentialsDeprecated.csv"
 REPO_DIR = Path(__file__).resolve().parent
 
 # Step 7 inputs: the undergraduate catalog PDF (kept local, in DATA_DIR) and the
-# catalog2ctdl extraction profile (in this repo)
+# pdf-catalog-to-bulk-upload extraction profile (in this repo)
 CATALOG_PDF = DATA_DIR / "KU-Undergraduate-Catalog-2025-2026.pdf"
 COURSE_PROFILE = REPO_DIR / "profiles" / "kutztown-undergraduate-2025-2026.yaml"
 

@@ -1,7 +1,7 @@
 """
 Step 7: Extract every course from the undergraduate catalog PDF.
 
-Uses the catalog2ctdl package with the Kutztown profile in
+Uses the pdf-catalog-to-bulk-upload package (pdf_catalog_bu) with the Kutztown profile in
 profiles/kutztown-undergraduate-2025-2026.yaml. The profile records how this
 catalog is laid out: the "Course Descriptions" section (pp. 343-676), bold
 "ACCT 121: Title" headings, subject-area headings, and the boilerplate
@@ -17,11 +17,11 @@ Outputs: kutztown_courses_extracted.csv           one row per course
          kutztown_courses_extract_qa.csv          issues to look at in review
 """
 
-from catalog2ctdl.config import load_config, validate
-from catalog2ctdl.parser import INTERMEDIATE_COLUMNS
-from catalog2ctdl.pipeline import extract, write_csv
-from catalog2ctdl.qa import QA_COLUMNS, run_qa
-from catalog2ctdl.transform import to_bulk_upload
+from pdf_catalog_bu.config import load_config, validate
+from pdf_catalog_bu.parser import INTERMEDIATE_COLUMNS
+from pdf_catalog_bu.pipeline import extract, write_csv
+from pdf_catalog_bu.qa import QA_COLUMNS, run_qa
+from pdf_catalog_bu.transform import to_bulk_upload
 
 from ku_common import (
     CATALOG_PDF,

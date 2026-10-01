@@ -78,7 +78,7 @@ the course steps.
    missing frameworks, blank required fields, and duplicate CTIDs.
 
 7. **Extract courses:** reads the catalog's *Course Descriptions* section
-   (pp. 343–676) with [catalog2ctdl](https://github.com/CredentialEngine/catalog-to-ctdl),
+   (pp. 343–676) with [pdf-catalog-to-bulk-upload](https://github.com/CredentialEngine/pdf-catalog-to-bulk-upload),
    using the profile in `profiles/`. Each bold `ACCT 121: Title` heading starts a
    course; the large headings above them (*Accounting*, *Biology*) become the
    subject area. The PDF draws much of its text twice and repeats the last lines
@@ -150,7 +150,7 @@ current directory:
 export KUTZTOWN_DATA_DIR=/path/to/Kutztown
 ```
 
-Steps 7–9 use the [catalog2ctdl](https://github.com/CredentialEngine/catalog-to-ctdl)
+Steps 7–9 use the [pdf-catalog-to-bulk-upload](https://github.com/CredentialEngine/pdf-catalog-to-bulk-upload)
 package, which `requirements.txt` installs from GitHub. Step 7 expects the
 catalog PDF in the data folder:
 
@@ -161,7 +161,7 @@ $KUTZTOWN_DATA_DIR/KU-Undergraduate-Catalog-2025-2026.pdf
 (from <https://www.kutztown.edu/Departments-Offices/A-F/Catalog/Documents/KU-Undergraduate-Catalog-2025-2026.pdf>).
 For a new catalog year, copy the profile, update `catalog.url`,
 `version_identifier` and the file names in `ku_common.py`, and run
-`catalog2ctdl inspect` on a few course pages to confirm the headings still match.
+`pdf-catalog-bu inspect` on a few course pages to confirm the headings still match.
 
 ### Credentials
 
