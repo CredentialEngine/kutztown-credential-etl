@@ -1,4 +1,15 @@
-# Kutztown Credential ETL
+# Kutztown Credential ETL (Prototype)
+
+> [!WARNING]
+> **Prototype for demonstration only. Not for production use.**
+>
+> This project is intended solely as a demonstration of the art of the possible. It is a prototype for exploring potential approaches and capabilities, not a production-ready application. The code has not been formally reviewed, tested, or vetted by Credential Engine for accuracy, security, reliability, or suitability for implementation.
+>
+> In particular:
+> - The scripts are written for **Kutztown's 2025 website and 2025–26 catalog layout**. They will need changes if either changes, and they are not a general tool for other institutions.
+> - Matching parsed programs to published credentials is **fuzzy** and needs the manual review steps described below.
+> - There is **no automated test suite**.
+> - Every bulk upload file **must be reviewed by a person** before it is published to the Registry.
 
 Scripts for extracting Kutztown University's degree, certificate, and minor
 programs and their Student Learning Outcomes from
